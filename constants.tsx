@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { SlideData } from './types';
 import { Zap, Target, BarChart3, Users, Cpu, Layers, MessageSquare, ArrowRight, Heart, Shield, Star, Smile, Cloud, Sparkles, Flower2, Music, Hash, Globe } from 'lucide-react';
 
