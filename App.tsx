@@ -145,6 +145,33 @@ const App: React.FC = () => {
       {/* Floating Stickers */}
       <FloatingStickers accentColor={slide.accentColor} />
 
+      {/* Navigation Click Zones (Invisible overlays) */}
+      {!showIntro && !isEditMode && (
+        <>
+          {/* Left Zone - Prev */}
+          <div 
+            onClick={handlePrev}
+            className={`fixed inset-y-0 left-0 w-[15vw] z-30 cursor-pointer group transition-colors hover:bg-white/5 ${currentSlide === 0 ? 'hidden' : 'block'}`}
+            title="Slide Sebelumnya"
+          >
+             <div className="absolute left-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-50 transition-opacity hidden md:block">
+                <ChevronLeft className="w-10 h-10 text-white" />
+             </div>
+          </div>
+          
+          {/* Right Zone - Next */}
+          <div 
+            onClick={handleNext}
+            className={`fixed inset-y-0 right-0 w-[15vw] z-30 cursor-pointer group transition-colors hover:bg-white/5 ${currentSlide === slides.length - 1 ? 'hidden' : 'block'}`}
+            title="Slide Selanjutnya"
+          >
+             <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-50 transition-opacity hidden md:block">
+                <ChevronRight className="w-10 h-10 text-white" />
+             </div>
+          </div>
+        </>
+      )}
+
       {/* Main Content */}
       <div className="relative w-full h-full max-w-7xl mx-auto px-4 md:px-6 flex flex-col justify-center z-10">
         <AnimatePresence initial={false} custom={direction} mode="wait">
@@ -156,7 +183,8 @@ const App: React.FC = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="w-full h-full flex items-center justify-center p-2 md:p-10 overflow-y-auto md:overflow-hidden no-scrollbar"
+              // Added pb-24 to ensure content is not hidden behind the fixed dock
+              className="w-full h-full flex items-center justify-center p-4 pb-28 md:p-10 md:pb-10 overflow-y-auto md:overflow-hidden no-scrollbar"
             >
               <SlideRenderer 
                 slide={slide} 
@@ -168,15 +196,17 @@ const App: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      {/* Navigation Bar (The "Dock") - REDESIGNED */}
+      {/* Navigation Bar (The "Dock") - REDESIGNED & FIXED POSITION */}
       {!showIntro && (
         <motion.div 
-          initial={{ y: 100 }}
+          initial={{ y: 150 }}
           animate={{ y: 0 }}
           transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
-          className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[95vw]"
+          // Changed to 'fixed' to prevent it from being cut off or scrolled away
+          // z-[60] ensures it is above everything including click zones
+          className="fixed bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-[60] w-auto max-w-[95vw]"
         >
-          <div className="flex items-center gap-1 md:gap-2 p-1.5 md:p-2 bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)] ring-1 ring-white/5">
+          <div className="flex items-center gap-1 md:gap-2 p-1.5 md:p-2 bg-[#0a0a0a]/90 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)] ring-1 ring-white/5">
             
             {/* Edit Toggle Button */}
             <button
@@ -204,7 +234,7 @@ const App: React.FC = () => {
             <button 
               onClick={handlePrev}
               disabled={currentSlide === 0}
-              className="group w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all disabled:opacity-20 hover:bg-white/10 active:scale-95"
+              className="group w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all disabled:opacity-20 hover:bg-white/10 active:scale-95"
             >
               <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:-translate-x-0.5 transition-transform" />
             </button>
@@ -213,8 +243,8 @@ const App: React.FC = () => {
             <div className="h-6 md:h-8 w-[1px] bg-white/10 mx-1 md:mx-2" />
 
             {/* Counter - Technical Style */}
-            <div className="flex flex-col items-center justify-center min-w-[60px] md:min-w-[80px]">
-              <span className="font-display font-black text-lg md:text-2xl leading-none tabular-nums">
+            <div className="flex flex-col items-center justify-center min-w-[50px] md:min-w-[80px]">
+              <span className="font-display font-black text-base md:text-2xl leading-none tabular-nums">
                 0{currentSlide + 1}
               </span>
               <span className="text-[8px] md:text-[9px] text-white/40 font-mono tracking-[0.2em] mt-0.5 md:mt-1">
@@ -229,7 +259,7 @@ const App: React.FC = () => {
             <button 
               onClick={handleNext}
               disabled={currentSlide === slides.length - 1}
-              className="group w-12 h-12 md:w-14 md:h-14 rounded-full bg-white text-black flex items-center justify-center transition-all hover:scale-105 active:scale-90 disabled:opacity-50 disabled:bg-zinc-800 disabled:text-white/20 disabled:hover:scale-100 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+              className="group w-10 h-10 md:w-14 md:h-14 rounded-full bg-white text-black flex items-center justify-center transition-all hover:scale-105 active:scale-90 disabled:opacity-50 disabled:bg-zinc-800 disabled:text-white/20 disabled:hover:scale-100 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
             >
               <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-0.5 transition-transform" />
             </button>
@@ -244,10 +274,10 @@ const App: React.FC = () => {
              initial={{ y: -50, opacity: 0 }}
              animate={{ y: 0, opacity: 1 }}
              exit={{ y: -50, opacity: 0 }}
-             className="absolute top-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-black px-4 py-2 rounded-full font-bold text-sm shadow-xl z-50 flex items-center gap-2 pointer-events-none"
+             className="absolute top-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-black px-4 py-2 rounded-full font-bold text-xs md:text-sm shadow-xl z-[70] flex items-center gap-2 pointer-events-none w-max max-w-[90vw] text-center"
            >
-             <Edit3 className="w-4 h-4" />
-             MODE EDIT: Klik teks atau ikon kamera. Edit tersimpan otomatis.
+             <Edit3 className="w-4 h-4 flex-shrink-0" />
+             Edit Mode: Klik teks/ikon untuk ubah.
            </motion.div>
         )}
       </AnimatePresence>
